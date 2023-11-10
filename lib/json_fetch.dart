@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; // Import the http package
 
 class JsonFetchDemo extends StatefulWidget {
   @override
@@ -7,21 +8,16 @@ class JsonFetchDemo extends StatefulWidget {
 }
 
 class _JsonFetchDemoState extends State<JsonFetchDemo> {
-  // URL of the JSON API you want to fetch data from
   final String apiUrl = 'https://jsonplaceholder.typicode.com/posts';
-
-  // Variable to store the fetched JSON data
   List<dynamic> jsonData = [];
+  final http.Client httpClient =
+      http.Client(); // Create an instance of http.Client
 
-  get http => null;
-
-  // Function to fetch JSON data from the API
   Future<void> fetchJsonData() async {
     try {
-      final response = await http.get(Uri.parse(apiUrl));
+      final response = await httpClient.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
-        // If the server returns a 200 OK response, parse the JSON
         setState(() {
           jsonData = json.decode(response.body);
         });
@@ -40,6 +36,12 @@ class _JsonFetchDemoState extends State<JsonFetchDemo> {
   }
 
   @override
+  void dispose() {
+    httpClient.close(); // Close the HTTP client when the widget is disposed
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +50,7 @@ class _JsonFetchDemoState extends State<JsonFetchDemo> {
       ),
       body: Center(
         child: jsonData.isEmpty
-            ? const CircularProgressIndicator() // Show loading indicator while fetching data
+            ? const CircularProgressIndicator()
             : ListView.builder(
                 itemCount: jsonData.length,
                 itemBuilder: (context, index) {
