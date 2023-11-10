@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http_json/json_fetch.dart';
+import 'package:http_json/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +15,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'JSON API Fetch',
-      home: JsonFetchDemo(),
+      home: SplashScreen(),
     );
   }
 }
